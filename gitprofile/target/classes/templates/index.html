@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1" />
+<title>Insert title here</title>
+<script src="../static/js/jquery-1.11.3.min.js"
+	th:src="@{/js/jquery-1.11.3.min.js}"></script>
+<script>
+	function fetchProfileDetails() {
+		var userName = $("#userName").val();
+		if(userName==""){
+			alert(" User Name is empty !")
+		}
+		$("#content").empty();
+		$.ajax({
+			url : '/getAccountDetails/' + userName,
+			type : 'Get',
+			success : function(response) {
+				//$('#result').text(JSON.stringify(response));
+				if(response.status=="success"){
+					$("#name").text(response.name);
+					$("#company").text(response.company);
+					var projectArr=response.projectDetails;
+					var length=projectArr.length;
+					for(i=0;length>i;i++){
+						var prjlDtls=projectArr[i];
+						var mainDiv=$("<div></div>");
+						var projectDiv=$("<div></div>").css({'width':'49%','float': 'left', 'padding-top': '10px','border':'1px solid red'}).
+								text(prjlDtls.projectName);
+						var langaugeDiv=$("<div></div>").css( {'width':'49%','float': 'left', 'padding-top': '10px','border':'1px solid red'}).
+								text(prjlDtls.language);
+						mainDiv.append(projectDiv);
+						mainDiv.append(langaugeDiv);
+						$("#content").append(mainDiv);
+					}
+					
+				
+				}
+			}
+		});
+
+	}
+</script>
+</head>
+<body>
+	<div style="height: 100%; width: 100%;">
+		<div>
+			<input id="userName" type="text" /> 
+			<input type="button" value="CreateProfile" onclick='fetchProfileDetails();' />
+
+		</div>
+		<div id='profile' style="height: 500px">
+			<div id="profileDetails" style="padding-top: 10px;height: 26px; width:440px">
+				<div style="float: left; padding: 10px; width:50%">
+					Name:<span id='name'></span>
+				</div>
+				<div style="float: left; padding: 10px; width:50%">
+					Company:<span id='company'></span>
+				</div>
+			</div>
+			<div  style="padding-top: 10px">
+				
+				<div id="projectDetails" style="height: 400px; width:440px">
+					
+					<div >
+						<div style="border:1px solid red;float: left; padding-top: 10px; width:49%">Project Name:</div>
+						<div style="border:1px solid red;float: left; padding-top: 10px; width:49%">Language</div>
+					</div>
+					<div id="content">
+						
+					</div>
+
+
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
